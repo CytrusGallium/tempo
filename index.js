@@ -53,7 +53,7 @@ app.post("/upload", (req, res) => {
 
 });
 
-// Upload route
+// Download route
 app.get("/download", (req, res) => {
 
     console.log("Download request received : " + req.query.file);
@@ -70,6 +70,27 @@ app.get("/download", (req, res) => {
             res.setHeader('Content-Disposition', 'attachment; filename="' + req.query.file + '"');
             res.end(data);
         }
+    });
+
+});
+
+// List all file in upload directory
+app.get("/list", (req, res) => {
+
+    console.log("Listing uploaded files...");
+
+    fs.readdir(uploadDirectory, (err, files) => {
+
+        if (err) {
+            console.log("ERROR : " + err);
+            res.status(500).send({ message: "ERROR" });
+        }
+
+        files.forEach(file => {
+            console.log(file);
+        });
+
+        res.status(200).send({ files: files });
     });
 
 });
